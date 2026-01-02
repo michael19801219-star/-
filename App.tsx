@@ -16,28 +16,42 @@ const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
     setIsLoading(true);
     setState(AppState.ANALYZING);
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64 = (reader.result as string).split(',')[1];
-      try {
-        const result = await analyzeExamPaper(base64);
-        setReport(result);
-        setState(AppState.REPORT);
-      } catch (error) {
-        console.error("Analysis failed:", error);
-        alert("分析失败，请重试。");
-        setState(AppState.HOME);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Fix: Explicitly cast Array.from result and type the map argument to ensure 'file' is treated as a Blob.
+      const base64Promises = (Array.from(files) as File[]).map((file: File) => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            if (typeof reader.result === 'string') {
+              resolve(reader.result.split(',')[1]);
+            } else {
+              reject(new Error('Failed to read file as string'));
+            }
+          };
+          // Fix: Avoid passing ProgressEvent to reject to maintain clean error typing.
+          reader.onerror = () => reject(new Error('FileReader encountered an error reading the file.'));
+          // Line 31 fix: ensures 'file' is recognized as a Blob for readAsDataURL.
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const base64Images = await Promise.all(base64Promises);
+      const result = await analyzeExamPaper(base64Images);
+      setReport(result);
+      setState(AppState.REPORT);
+    } catch (error: any) {
+      console.error("Detailed analysis error:", error);
+      alert(`分析失败: ${error.message || '未知错误'}。请确保上传了清晰的试卷照片。`);
+      setState(AppState.HOME);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const startPractice = async () => {
@@ -70,8 +84,8 @@ const App: React.FC = () => {
         {state === AppState.ANALYZING && (
           <div className="flex flex-col items-center justify-center h-64 space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="text-slate-600 text-lg animate-pulse">正在利用AI分析化学试卷...</p>
-            <p className="text-xs text-slate-400">我们将提取题目、诊断错因并生成深度解析</p>
+            <p className="text-slate-600 text-lg animate-pulse font-medium">正在利用AI多维度分析化学试卷...</p>
+            <p className="text-xs text-slate-400">我们将提取多页题目、诊断错因并生成深度解析</p>
           </div>
         )}
 
@@ -93,7 +107,6 @@ const App: React.FC = () => {
 
       <AIChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
 
-      {/* Floating Action Button for Chat */}
       <button 
         onClick={toggleChat}
         className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 flex items-center justify-center transition-all hover:scale-105 z-40"

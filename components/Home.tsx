@@ -11,7 +11,7 @@ const Home: React.FC<HomeProps> = ({ onUpload }) => {
       <div className="text-center mb-12">
         <h2 className="text-4xl font-extrabold text-slate-900 mb-4">精准诊断化学薄弱项</h2>
         <p className="text-slate-500 text-lg max-w-xl mx-auto">
-          拍照上传你的化学试卷，AI将为你深度诊断知识盲区，并提供针对性的特级教师级解析。
+          拍照上传你的化学试卷（支持多张同时上传），AI将为你深度诊断知识盲区，并提供针对性的特级教师级解析。
         </p>
       </div>
 
@@ -24,22 +24,23 @@ const Home: React.FC<HomeProps> = ({ onUpload }) => {
         </div>
         
         <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-10 rounded-xl transition-all shadow-md hover:shadow-lg w-full text-center mb-4">
-          拍照/选择试卷
+          拍照/选择一张或多张试卷
           <input 
             type="file" 
             accept="image/*" 
+            multiple
             className="hidden" 
             onChange={onUpload}
           />
         </label>
-        <p className="text-slate-400 text-sm">支持 .jpg, .png 格式试卷图片</p>
+        <p className="text-slate-400 text-sm">支持 .jpg, .png 格式，可多选</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 w-full">
         <FeatureCard 
           icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-          title="错因精准识别"
-          description="AI不仅能判分，还能识别是概念不清、计算错误还是逻辑断层。"
+          title="多页识别分析"
+          description="支持同时上传整套卷子，AI会自动合并题目并进行全局性知识分析。"
         />
         <FeatureCard 
           icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>}
