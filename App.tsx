@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { AppState, ChemistryReport, AIQuestion } from './types';
-import { analyzeExamPaper, generatePracticeQuestions } from './services/geminiService';
-import Header from './components/Header';
-import Home from './components/Home';
-import AnalysisReport from './components/AnalysisReport';
-import PracticeSession from './components/PracticeSession';
-import AIChatDrawer from './components/AIChatDrawer';
+import React, { useState } from 'react';
+import { AppState, ChemistryReport, AIQuestion } from './types.ts';
+import { analyzeExamPaper, generatePracticeQuestions } from './services/geminiService.ts';
+import Header from './components/Header.tsx';
+import Home from './components/Home.tsx';
+import AnalysisReport from './components/AnalysisReport.tsx';
+import PracticeSession from './components/PracticeSession.tsx';
+import AIChatDrawer from './components/AIChatDrawer.tsx';
 
 const App: React.FC = () => {
   const [state, setState] = useState<AppState>(AppState.HOME);

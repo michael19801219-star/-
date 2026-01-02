@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChemistryReport } from '../types';
+import { ChemistryReport } from '../types.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface AnalysisReportProps {
@@ -10,8 +10,7 @@ interface AnalysisReportProps {
 }
 
 const AnalysisReport: React.FC<AnalysisReportProps> = ({ report, onPractice, isGenerating }) => {
-  // Chart data: count correct vs incorrect by topic is hard from simple schema, 
-  // let's just visualize the correctness of questions overall or weak points frequency
+  // Chart data: count correct vs incorrect by topic
   const topicData = report.weakPoints.map((point, index) => ({
     name: point,
     count: report.analyzedQuestions.filter(q => q.topic === point && !q.isCorrect).length || (index + 1) * 2

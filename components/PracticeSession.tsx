@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AIQuestion } from '../types';
+import { AIQuestion } from '../types.ts';
 
 interface PracticeSessionProps {
   questions: AIQuestion[];
