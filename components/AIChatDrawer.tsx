@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { chatWithAI } from '../services/geminiService.ts';
+import { chatWithAI } from '../services/geminiService';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -36,7 +36,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
 
     try {
       const response = await chatWithAI([], userMessage);
-      setMessages(prev => [...prev, { role: 'assistant', content: response || '对不起，我没听清楚，能再说一遍吗？' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: response || '抱歉，我现在无法回答这个问题。' }]);
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: '抱歉，连接AI助手时出了点问题。' }]);
     } finally {
@@ -48,7 +48,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
       <div className="relative w-full max-w-lg bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
           <div className="flex items-center space-x-3">
@@ -104,7 +104,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="输入你的化学疑问，如：为什么苯不褪色高锰酸钾？"
+              placeholder="输入你的化学疑问..."
               className="w-full bg-slate-50 border-none rounded-2xl py-4 pl-5 pr-14 text-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none"
             />
             <button 
@@ -117,7 +117,6 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
               </svg>
             </button>
           </div>
-          <p className="text-[10px] text-slate-400 mt-3 text-center uppercase font-bold tracking-widest">Powered by Gemini AI Technology</p>
         </div>
       </div>
     </div>

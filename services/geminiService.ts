@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { ChemistryReport, AIQuestion } from "../types.ts";
+import { ChemistryReport, AIQuestion } from "../types";
 
 // Always use the process.env.API_KEY directly as per guidelines.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -21,9 +21,8 @@ export const analyzeExamPaper = async (base64Images: string[]): Promise<Chemistr
   4. 综合所有页面，总结学生的知识薄弱点。
   5. 给出综合分数（0-100）。
   
-  请严格按照指定的JSON格式输出。`;
+  请严格按照指定的JSON格式输出，不要包含任何MarkDown代码块标记或其他冗余文字。`;
 
-  // Using ai.models.generateContent with both model name and prompt/contents.
   const response = await ai.models.generateContent({
     model,
     contents: {
@@ -68,20 +67,18 @@ export const analyzeExamPaper = async (base64Images: string[]): Promise<Chemistr
     }
   });
 
-  // Extracting text output from response.text property.
   const text = response.text;
-  if (!text) throw new Error("AI returned empty response");
+  if (!text) throw new Error("AI未能返回分析数据。");
   
   try {
     return JSON.parse(text);
   } catch (e) {
-    console.error("Failed to parse JSON:", text);
-    throw new Error("解析AI返回数据失败");
+    console.error("Failed to parse AI response:", text);
+    throw new Error("数据格式解析失败，请尝试重新拍照。");
   }
 };
 
 export const generatePracticeQuestions = async (weakPoints: string[]): Promise<AIQuestion[]> => {
-  // Complex reasoning task: use gemini-3-pro-preview.
   const model = "gemini-3-pro-preview";
   const prompt = `针对以下化学薄弱知识点，生成3道高质量的高考难度模拟练习题：${weakPoints.join(", ")}。
   要求：题目严谨，选项具有迷惑性，解析极其详尽。`;
@@ -119,7 +116,6 @@ export const generatePracticeQuestions = async (weakPoints: string[]): Promise<A
 };
 
 export const chatWithAI = async (history: { role: string, parts: { text: string }[] }[], message: string) => {
-  // STEM chat is a complex reasoning task.
   const chat = ai.chats.create({
     model: 'gemini-3-pro-preview',
     config: {
