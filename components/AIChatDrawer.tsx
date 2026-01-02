@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { chatWithAI } from '../services/geminiService';
+import { chatWithAI } from '../services/geminiService.ts';
 
 interface Message {
   role: 'user' | 'assistant';

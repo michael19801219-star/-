@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChemistryReport } from '../types';
+import { ChemistryReport } from '../types.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface AnalysisReportProps {
