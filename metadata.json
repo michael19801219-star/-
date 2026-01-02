@@ -1,0 +1,7 @@
+{
+  "name": "高考化学提分宝",
+  "description": "基于AI的高中化学弱项自测与提分平台，支持拍照搜题、深度解析、精准出题和AI智能答疑。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
